@@ -24,7 +24,7 @@ def load_proggan(domain):
     model = proggan.from_state_dict(sd)
     return model
 
-def load_classifier(architecture, url):
+def load_classifier_from_url(architecture, url):
     model_factory = dict(
             alexnet=oldalexnet.AlexNet,
             vgg16=oldvgg16.vgg16,
