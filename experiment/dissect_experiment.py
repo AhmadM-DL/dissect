@@ -194,7 +194,7 @@ def instrumented_layername(args):
 
 def load_model(args):
     '''Loads one of the benchmark classifiers or generators.'''
-    if args.model in ['alexnet', 'vgg16', 'resnet152']:
+    if args.model in ['alexnet', 'vgg16', 'resnet152', 'dcvgg16']:
         if args.model_url:
             model = setting.load_classifier_from_url(args.model, args.model_url)
         else:
