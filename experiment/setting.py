@@ -1,6 +1,7 @@
 import torch, torchvision, os, collections
 from netdissect import parallelfolder, zdataset, renormalize, segmenter
 from . import oldalexnet, oldvgg16, oldresnet152, dcvgg16
+import deep_cluster_models
 
 def load_proggan(domain):
     # Automatically download and cache progressive GAN model
@@ -24,42 +25,31 @@ def load_proggan(domain):
     model = proggan.from_state_dict(sd)
     return model
 
-def load_classifier_from_url(architecture, url, num_classes=365):
-    model_factory = dict(
-            alexnet=oldalexnet.AlexNet,
-            dcvgg16=dcvgg16.vgg16,
-            vgg16=oldvgg16.vgg16,
-            resnet152=oldresnet152.OldResNet152)[architecture]
-    model = model_factory(num_classes=num_classes)
+def load_deep_cluster_models(architecture, url):
     try:
         sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
-        if sd.get("state_dict", None):
-            sd = sd["state_dict"]
-
-            # deal with a dataparallel table
-            def rename_key(key):
-                if not 'module' in key:
-                    return key
-                return ''.join(key.split('.module'))
-
-            sd = {rename_key(key): val
-                        for key, val
-                        in sd.items()}
     except:
         sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
-        if sd.get("state_dict", None):
-            sd = sd["state_dict"]
-                        # deal with a dataparallel table
-            def rename_key(key):
-                if not 'module' in key:
-                    return key
-                return ''.join(key.split('.module'))
 
-            sd = {rename_key(key): val
-                        for key, val
-                        in sd.items()}
-            
-    model.load_state_dict(sd)
+    # size of the top layer
+    N = sd['state_dict']['top_layer.bias'].size()
+
+    # build skeleton of the model
+    sob = 'sobel.0.weight' in sd['state_dict'].keys()
+    model = deep_cluster_models.__dict__[sd['arch']](sobel=sob, out=int(N[0]))
+
+    # deal with a dataparallel table
+    def rename_key(key):
+        if not 'module' in key:
+            return key
+        return ''.join(key.split('.module'))
+
+    sd['state_dict'] = {rename_key(key): val
+                                    for key, val
+                                    in sd['state_dict'].items()}
+
+    # load weights
+    model.load_state_dict(sd['state_dict'])
     model.eval()
     return model
 

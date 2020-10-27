@@ -22,7 +22,6 @@ def parseargs():
     aa('--quantile', type=float, default=0.01)
     aa('--miniou', type=float, default=0.04)
     aa('--thumbsize', type=int, default=100)
-    aa('--model_url', default=None )
     args = parser.parse_args()
     return args
 
@@ -198,9 +197,10 @@ def load_model(args):
         model = setting.load_classifier(args.model)
     elif args.model == 'progan':
         model = setting.load_proggan(args.dataset)
-    elif args.model == "dcvgg16":
-        url = 'https://dl.fbaipublicfiles.com/deepcluster/vgg16/checkpoint.pth.tar'
-        model = setting.load_classifier_from_url(args.model, url, 10000)
+    elif "dc_" in args.model:
+        arch = args.model.split("_")[1]
+        url = 'https://dl.fbaipublicfiles.com/deepcluster'+arch+'/checkpoint.pth.tar'
+        model = setting.load_deep_cluster_models(arch, url)
     model = nethook.InstrumentedModel(model).cuda().eval()
     return model
 
