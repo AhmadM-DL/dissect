@@ -11,7 +11,7 @@ def parseargs():
     parser = argparse.ArgumentParser()
     def aa(*args, **kwargs):
         parser.add_argument(*args, **kwargs)
-    aa('--model', choices=['alexnet', 'vgg16', 'resnet152', 'progan'],
+    aa('--model', choices=['alexnet', 'vgg16', 'resnet152', 'progan', 'dcvgg16'],
             default='alexnet')
     aa('--dataset', choices=['places', 'church', 'kitchen', 'livingroom',
                              'bedroom'],
