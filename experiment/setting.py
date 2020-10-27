@@ -1,6 +1,6 @@
 import torch, torchvision, os, collections
 from netdissect import parallelfolder, zdataset, renormalize, segmenter
-from . import oldalexnet, oldvgg16, oldresnet152, dcvgg16
+from . import oldalexnet, oldvgg16, oldresnet152
 import deep_cluster_models
 
 def load_proggan(domain):
