@@ -33,8 +33,12 @@ def load_classifier_from_url(architecture, url):
     model = model_factory(num_classes=365)
     try:
         sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
+        if sd.get("state_dict", None):
+            sd = sd["state_dict"]
     except:
         sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
+        if sd.get("state_dict", None):
+            sd = sd["state_dict"]
     model.load_state_dict(sd)
     model.eval()
     return model
