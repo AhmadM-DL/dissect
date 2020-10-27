@@ -22,6 +22,7 @@ def parseargs():
     aa('--quantile', type=float, default=0.01)
     aa('--miniou', type=float, default=0.04)
     aa('--thumbsize', type=int, default=100)
+    aa('--model_url', default=None )
     args = parser.parse_args()
     return args
 
@@ -194,7 +195,10 @@ def instrumented_layername(args):
 def load_model(args):
     '''Loads one of the benchmark classifiers or generators.'''
     if args.model in ['alexnet', 'vgg16', 'resnet152']:
-        model = setting.load_classifier(args.model)
+        if args.model_url:
+            model = setting.load_classifier(args.model, args.model_url)
+        else:
+            model = setting.load_classifier(args.model)
     elif args.model == 'progan':
         model = setting.load_proggan(args.dataset)
     model = nethook.InstrumentedModel(model).cuda().eval()

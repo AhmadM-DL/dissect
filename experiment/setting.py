@@ -24,6 +24,20 @@ def load_proggan(domain):
     model = proggan.from_state_dict(sd)
     return model
 
+def load_classifier(architecture, url):
+    model_factory = dict(
+            alexnet=oldalexnet.AlexNet,
+            vgg16=oldvgg16.vgg16,
+            resnet152=oldresnet152.OldResNet152)[architecture]
+    model = model_factory(num_classes=365)
+    try:
+        sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
+    except:
+        sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
+    model.load_state_dict(sd)
+    model.eval()
+    return model
+
 def load_classifier(architecture):
     model_factory = dict(
             alexnet=oldalexnet.AlexNet,
