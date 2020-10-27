@@ -24,13 +24,13 @@ def load_proggan(domain):
     model = proggan.from_state_dict(sd)
     return model
 
-def load_classifier_from_url(architecture, url):
+def load_classifier_from_url(architecture, url, num_classes=365):
     model_factory = dict(
             alexnet=oldalexnet.AlexNet,
             dcvgg16=dcvgg16.vgg16,
             vgg16=oldvgg16.vgg16,
             resnet152=oldresnet152.OldResNet152)[architecture]
-    model = model_factory(num_classes=365)
+    model = model_factory(num_classes=num_classes)
     try:
         sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
         if sd.get("state_dict", None):
