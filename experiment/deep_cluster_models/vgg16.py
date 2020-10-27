@@ -88,7 +88,7 @@ def make_layers(input_dim, batch_norm):
     return nn.Sequential(*layers)
 
 
-def vgg16(num_classes, sobel=False, bn=True):
+def vgg16(out=10000, sobel=False, bn=True):
     dim = 2 + int(not sobel)
-    model = VGG(make_layers(dim, bn), num_classes, sobel)
+    model = VGG(make_layers(dim, bn), out, sobel)
     return model
