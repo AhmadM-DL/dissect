@@ -35,10 +35,30 @@ def load_classifier_from_url(architecture, url, num_classes=365):
         sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
         if sd.get("state_dict", None):
             sd = sd["state_dict"]
+
+            # deal with a dataparallel table
+            def rename_key(key):
+                if not 'module' in key:
+                    return key
+                return ''.join(key.split('.module'))
+
+            sd = {rename_key(key): val
+                        for key, val
+                        in sd.items()}
     except:
         sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
         if sd.get("state_dict", None):
             sd = sd["state_dict"]
+                        # deal with a dataparallel table
+            def rename_key(key):
+                if not 'module' in key:
+                    return key
+                return ''.join(key.split('.module'))
+
+            sd = {rename_key(key): val
+                        for key, val
+                        in sd.items()}
+            
     model.load_state_dict(sd)
     model.eval()
     return model
