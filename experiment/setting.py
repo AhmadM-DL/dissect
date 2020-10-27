@@ -27,6 +27,7 @@ def load_proggan(domain):
 def load_classifier_from_url(architecture, url):
     model_factory = dict(
             alexnet=oldalexnet.AlexNet,
+            dcvgg16=dcvgg16.vgg16,
             vgg16=oldvgg16.vgg16,
             resnet152=oldresnet152.OldResNet152)[architecture]
     model = model_factory(num_classes=365)
