@@ -52,7 +52,7 @@ def load_deep_cluster_models(architecture, url):
     # load weights
     model.load_state_dict(sd['state_dict'])
     model.features = torch.nn.Sequential(collections.OrderedDict(zip([
-        'conv1_1', 'batch_norm1_1', 'relu_1',
+        'conv1_1', 'batch_norm1_1', 'relu1_1',
         'conv1_2', 'batch_norm1_2', 'relu1_2',
         'pool1',
         'conv2_1', 'batch_norm2_1', 'relu2_1',
