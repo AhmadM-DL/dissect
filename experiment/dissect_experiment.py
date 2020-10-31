@@ -3,6 +3,7 @@ import torch, argparse, os, shutil, inspect, json, numpy, random
 from collections import defaultdict
 from netdissect import pbar, nethook, renormalize, pidfile, zdataset
 from netdissect import upsample, tally, imgviz, imgsave, bargraph
+import os
 from . import setting
 import netdissect
 torch.backends.cudnn.benchmark = True
@@ -21,12 +22,13 @@ def parseargs():
     aa('--quantile', type=float, default=0.01)
     aa('--miniou', type=float, default=0.04)
     aa('--thumbsize', type=int, default=100)
+    aa("--output_dir", type=string, default="results")
     args = parser.parse_args()
     return args
 
 def main():
     args = parseargs()
-    resdir = 'results/%s-%s-%s' % (args.model, args.dataset, args.seg)
+    resdir =  os.path.join(args.output_dir, '%s-%s-%s' % (args.model, args.dataset, args.seg)) 
     if args.layer is not None:
         resdir += '-' + args.layer
     if args.quantile != 0.005:
@@ -55,11 +57,11 @@ def main():
         hacts = upfn(acts)
         return hacts.permute(0, 2, 3, 1).contiguous().view(-1, acts.shape[1])
     rq = tally.tally_quantile(compute_samples, dataset,
-                              sample_size=sample_size,
-                              r=8192,
-                              num_workers=100,
-                              pin_memory=True,
-                              cachefile=resfile('rq.npz'))
+                            sample_size=sample_size,
+                            r=8192,
+                            num_workers=100,
+                            pin_memory=True,
+                            cachefile=resfile('rq.npz'))
 
     # Create visualizations - first we need to know the topk
     pbar.descnext('topk')
