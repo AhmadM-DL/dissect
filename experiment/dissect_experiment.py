@@ -22,7 +22,7 @@ def parseargs():
     aa('--quantile', type=float, default=0.01)
     aa('--miniou', type=float, default=0.04)
     aa('--thumbsize', type=int, default=100)
-    aa("--output_dir", type=string, default="results")
+    aa("--output_dir", type=str, default="results")
     args = parser.parse_args()
     return args
 
