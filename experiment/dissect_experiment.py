@@ -208,7 +208,7 @@ def load_model(args):
         if args.model_path:
             url= args.model_path
         else:
-            url = 'https://dl.fbaipublicfiles.com/deepcluster/'+arch+'/checkpoint.pth.tar'
+            url= 'https://dl.fbaipublicfiles.com/deepcluster/'+arch+'/checkpoint.pth.tar'
         model = setting.load_deep_cluster_models(arch, url)
     model = nethook.InstrumentedModel(model).cuda().eval()
     return model

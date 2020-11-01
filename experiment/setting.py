@@ -27,11 +27,16 @@ def load_proggan(domain):
     return model
 
 def load_deep_cluster_models(architecture, url):
-    try:
-        sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
-    except:
-        sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
 
+    if "http" in url:
+        # remote url
+        try:
+            sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
+        except:
+            sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
+    else:
+        #local url
+        sd = torch.load(url)
     # size of the top layer
     N = sd['state_dict']['top_layer.bias'].size()
 
