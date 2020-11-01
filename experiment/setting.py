@@ -46,7 +46,7 @@ def load_deep_cluster_models(architecture, url):
 
     # build skeleton of the model
     sob = 'sobel.0.weight' in sd['state_dict'].keys()
-    model = deep_cluster_models.__dict__[arch](sobel=sob, out=int(N[0]))
+    model = deep_cluster_models.__dict__[architecture](sobel=sob, out=int(N[0]))
 
     # deal with a dataparallel table
     def rename_key(key):
