@@ -37,12 +37,16 @@ def load_deep_cluster_models(architecture, url):
     else:
         #local url
         sd = torch.load(url)
+
     # size of the top layer
-    N = sd['state_dict']['top_layer.bias'].size()
+    if sd["state_dict"].get("top_layer.bias", None):
+        N = sd['state_dict']['top_layer.bias'].size()
+    else:
+        N=1000
 
     # build skeleton of the model
     sob = 'sobel.0.weight' in sd['state_dict'].keys()
-    model = deep_cluster_models.__dict__[sd['arch']](sobel=sob, out=int(N[0]))
+    model = deep_cluster_models.__dict__[arch](sobel=sob, out=int(N[0]))
 
     # deal with a dataparallel table
     def rename_key(key):
