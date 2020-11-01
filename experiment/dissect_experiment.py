@@ -22,6 +22,7 @@ def parseargs():
     aa('--quantile', type=float, default=0.01)
     aa('--miniou', type=float, default=0.04)
     aa('--thumbsize', type=int, default=100)
+    aa('--model_path', type=str, default=None)
     aa("--output_dir", type=str, default="results")
     args = parser.parse_args()
     return args
@@ -204,7 +205,10 @@ def load_model(args):
         model = setting.load_proggan(args.dataset)
     elif "dc_" in args.model:
         arch = args.model.split("_")[1]
-        url = 'https://dl.fbaipublicfiles.com/deepcluster/'+arch+'/checkpoint.pth.tar'
+        if args.model_path:
+            url= args.model_path
+        else
+            url = 'https://dl.fbaipublicfiles.com/deepcluster/'+arch+'/checkpoint.pth.tar'
         model = setting.load_deep_cluster_models(arch, url)
     model = nethook.InstrumentedModel(model).cuda().eval()
     return model
