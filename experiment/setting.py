@@ -26,6 +26,10 @@ def load_proggan(domain):
     model = proggan.from_state_dict(sd)
     return model
 
+def adapt_state_to_model(state_dict, mapping){
+
+}
+
 def load_deep_cluster_models(architecture, url):
 
     if "http" in url:
@@ -39,10 +43,8 @@ def load_deep_cluster_models(architecture, url):
         sd = torch.load(url)
 
     # size of the top layer
-    if sd["state_dict"].get("top_layer.bias", None):
-        N = sd['state_dict']['top_layer.bias'].size()
-    else:
-        N=(1000,)
+    N = sd['state_dict']['top_layer.bias'].size()
+
 
     # build skeleton of the model
     sob = 'sobel.0.weight' in sd['state_dict'].keys()
