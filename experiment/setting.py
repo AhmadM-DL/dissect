@@ -78,7 +78,7 @@ def load_deep_cluster_models(architecture, url):
             'conv2', 'batch_norm2', 'relu2', "pool2",
             'conv3', 'batch_norm3', 'relu3', 
             'conv4', 'batch_norm4', 'relu4',
-            'conv5', 'batch_norm5', 'relu5',
+            'conv5', 'batch_norm5', 'relu5', "pool3"
             ],
             model.features)))
     model.eval()
