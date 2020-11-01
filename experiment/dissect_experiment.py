@@ -181,6 +181,10 @@ def instrumented_layername(args):
     if args.layer is not None:
         if args.model == 'vgg16':
             return 'features.' + args.layer
+        elif args.model == "dc_vgg16":
+            return 'features.' + args.layer
+        elif args.model == "dc_alexnet":
+            return 'features.'+ args.layer
         return args.layer
     # Default layers to probe
     if args.model == 'alexnet':
@@ -202,7 +206,6 @@ def load_model(args):
         arch = args.model.split("_")[1]
         url = 'https://dl.fbaipublicfiles.com/deepcluster/'+arch+'/checkpoint.pth.tar'
         model = setting.load_deep_cluster_models(arch, url)
-        args.model = arch
     model = nethook.InstrumentedModel(model).cuda().eval()
     return model
 
