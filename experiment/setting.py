@@ -26,9 +26,8 @@ def load_proggan(domain):
     model = proggan.from_state_dict(sd)
     return model
 
-def adapt_state_to_model(state_dict, mapping){
-
-}
+def adapt_state_to_model(state_dict, mapping):
+    return
 
 def load_deep_cluster_models(architecture, url):
 
