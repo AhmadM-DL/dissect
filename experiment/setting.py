@@ -42,7 +42,7 @@ def load_deep_cluster_models(architecture, url):
     if sd["state_dict"].get("top_layer.bias", None):
         N = sd['state_dict']['top_layer.bias'].size()
     else:
-        N=1000
+        N=(1000,)
 
     # build skeleton of the model
     sob = 'sobel.0.weight' in sd['state_dict'].keys()
