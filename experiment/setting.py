@@ -38,15 +38,6 @@ def load_m_deep_cluster_models(architecture, url):
     
     model.load_model_parameters(url)
 
-    sd = torch.load(url)
-
-    # size of the top layer
-    N = sd['state_dict']['top_layer.bias'].size()
-
-    # build skeleton of the model
-    sob = 'sobel.0.weight' in sd['state_dict'].keys()
-    model = deep_cluster_models.__dict__[architecture](sobel=sob, out=int(N[0]))
-
     if architecture == "vgg16":
         model.features = torch.nn.Sequential(collections.OrderedDict(zip([
             'conv1_1', 'batch_norm1_1', 'relu1_1',
