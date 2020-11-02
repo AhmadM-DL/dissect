@@ -30,7 +30,7 @@ def load_proggan(domain):
 def adapt_state_to_model(state_dict, mapping):
     return
 
-def m_load_deep_cluster_models(architecture, url):
+def load_m_deep_cluster_models(architecture, url):
     
     # local url
     if architecture == "alexnet":
