@@ -15,11 +15,11 @@ import os
 
 import numpy as np
 
-from custom_layers import SobelFilter
+from deep_clustering_net import SobelFilter
 from deep_clustering_net import DeepClusteringNet
 from sklearn.metrics import normalized_mutual_info_score
 
-from  layers_stacker import stack_convolutional_layers, stack_linear_layers
+from  deep_clustering_net import stack_convolutional_layers, stack_linear_layers
 
 def AlexNet_Micro(sobel, batch_normalization, device, concat_sobel=False):
     
