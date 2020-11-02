@@ -203,6 +203,11 @@ def load_model(args):
         model = setting.load_classifier(args.model)
     elif args.model == 'progan':
         model = setting.load_proggan(args.dataset)
+    
+    elif "m_dc_" in args.model:
+        arch = args.model.split("_")[2]
+        model = setting.load_m_deep_cluster_models(arch, args.model_path)
+
     elif "dc_" in args.model:
         arch = args.model.split("_")[1]
         if args.model_path:
