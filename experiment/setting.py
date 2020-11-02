@@ -34,10 +34,9 @@ def m_load_deep_cluster_models(architecture, url):
     
     # local url
     if architecture == "alexnet":
-        model = deep_cluster_m_models.AlexNet_Small(sobel=True, batch_normalization=True, torch.device("cpu"))
+        model = deep_cluster_m_models.AlexNet_Small(sobel=True, batch_normalization=True, device=torch.device("cpu"))
     
-    model.load_model_parameters(
-                url, optimizer=optimizer)
+    model.load_model_parameters(url)
 
     sd = torch.load(url)
 
