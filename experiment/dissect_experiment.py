@@ -186,6 +186,8 @@ def instrumented_layername(args):
             return 'features.' + args.layer
         elif args.model == "dc_alexnet":
             return 'features.'+ args.layer
+        elif args.model == "m_dc_alexnet":
+            return 'features.'+ args.layer
         return args.layer
     # Default layers to probe
     if args.model == 'alexnet':
