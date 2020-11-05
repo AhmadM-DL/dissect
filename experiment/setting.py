@@ -100,7 +100,7 @@ def load_swav_models(architecture, url):
     sd = {strip_module(key): val for key, val in sd.items()}
     model.load_state_dict(sd) 
     model.eval()
-    return
+    return model
 
 def load_deep_cluster_models(architecture, url):
 
