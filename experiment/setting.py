@@ -3,6 +3,7 @@ from netdissect import parallelfolder, zdataset, renormalize, segmenter
 from . import oldalexnet, oldvgg16, oldresnet152
 import deep_cluster_models
 import deep_cluster_m_models
+import ssmodels
 import collections
 
 def load_proggan(domain):
@@ -71,6 +72,35 @@ def load_m_deep_cluster_models(architecture, url):
     model.eval()
     return model
 
+def load_swav_models(architecture, url):
+
+    if "http" in url:
+        # remote url
+        try:
+            sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
+        except:
+            sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
+    else:
+    #local url
+        sd = torch.load(url)
+ 
+    model = ssmodels.resnet50.__dict__[architecture](
+        normalize=True,
+        hidden_mlp=2048,
+        output_dim=128,
+        nmb_prototypes=3000,
+    )
+
+    # deal with a dataparallel table
+    def strip_module(key):
+        if not 'module' in key:
+            return key
+        return ''.join(key.split('module.'))
+
+    sd = {strip_module(key): val for key, val in sd.items()}
+    model.load_state_dict(sd) 
+    model.eval()
+    return
 
 def load_deep_cluster_models(architecture, url):
 

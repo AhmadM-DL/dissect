@@ -188,6 +188,8 @@ def instrumented_layername(args):
             return 'features.'+ args.layer
         elif args.model == "m_dc_alexnet":
             return 'features.'+ args.layer
+        elif args.model == "swav_resnet50":
+            return "layer_4"
         return args.layer
     # Default layers to probe
     if args.model == 'alexnet':
@@ -205,7 +207,15 @@ def load_model(args):
         model = setting.load_classifier(args.model)
     elif args.model == 'progan':
         model = setting.load_proggan(args.dataset)
-    
+
+    elif "swav" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= 'https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar'
+        model = setting.load_swav_models(arch, url)
+
     elif "m_dc_" in args.model:
         arch = args.model.split("_")[2]
         model = setting.load_m_deep_cluster_models(arch, args.model_path)
@@ -217,6 +227,7 @@ def load_model(args):
         else:
             url= 'https://dl.fbaipublicfiles.com/deepcluster/'+arch+'/checkpoint.pth.tar'
         model = setting.load_deep_cluster_models(arch, url)
+
     model = nethook.InstrumentedModel(model).cuda().eval()
     return model
 
