@@ -84,7 +84,7 @@ def load_swav_models(architecture, url):
     #local url
         sd = torch.load(url)
     
-    model = ssmodels.resnet50.__dict__[architecture](
+    model = ssmodels.__dict__[architecture](
         normalize=True,
         hidden_mlp=2048,
         output_dim=128,
