@@ -213,7 +213,13 @@ def load_model(args):
         else:
             url= 'https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar'
         model = setting.load_swav_models(arch, url)
-
+    elif "npid" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= 'https://frontiers.blob.core.windows.net/pretraining/checkpoints/pil_pretrained_models/lemniscate/lemniscate_resnet50_update.pth'
+        model = setting.load_npid_models(arch, url)        
     elif "m_dc_" in args.model:
         arch = args.model.split("_")[2]
         model = setting.load_m_deep_cluster_models(arch, args.model_path)
