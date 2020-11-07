@@ -1,1 +1,2 @@
-from .resnet50 import *
+from .swav import *
+from .npid import *

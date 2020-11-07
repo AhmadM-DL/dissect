@@ -84,12 +84,7 @@ def load_npid_models(architecture, url):
     #local url
         sd = torch.load(url)
     
-    model = ssmodels.__dict__[architecture](
-        normalize=True,
-        hidden_mlp=2048,
-        output_dim=128,
-        nmb_prototypes=3000,
-    )
+    model = ssmodels.npid.__dict__[architecture]()
 
     # deal with a dataparallel table
     def strip_module(key):
@@ -115,7 +110,7 @@ def load_swav_models(architecture, url):
     #local url
         sd = torch.load(url)
     
-    model = ssmodels.__dict__[architecture](
+    model = ssmodels.swav.__dict__[architecture](
         normalize=True,
         hidden_mlp=2048,
         output_dim=128,
