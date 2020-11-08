@@ -110,7 +110,7 @@ def load_moco_models(architecture, url):
     #local url
         sd = torch.load(url)
 
-    model = models.__dict__[architecture]
+    model = models.__dict__[architecture]()
 
     # freeze all layers but the last fc
     for name, param in model.named_parameters():
@@ -119,8 +119,7 @@ def load_moco_models(architecture, url):
     # init the fc layer
     model.fc.weight.data.normal_(mean=0.0, std=0.01)
     model.fc.bias.data.zero_()
-    # load from pre-trained
-    checkpoint = torch.load(sd, map_location="cpu")
+    
     # rename moco pre-trained keys
     state_dict = sd['state_dict']
     for k in list(state_dict.keys()):
