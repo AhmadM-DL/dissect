@@ -148,17 +148,30 @@ def load_pcl_models(architecture, url):
     else:
     #local url
         sd = torch.load(url)
-    
-    model = models.__dict__[architecture]
 
-    # deal with a dataparallel table
-    def strip_module(key):
-        if not 'module' in key:
-            return key
-        return ''.join(key.split('module.'))
-    sd = sd["state_dict"]
-    sd = {strip_module(key): val for key, val in sd.items()}
-    model.load_state_dict(sd) 
+    model = models.__dict__[architecture]()
+
+    # freeze all layers but the last fc
+    for name, param in model.named_parameters():
+        if name not in ['fc.weight', 'fc.bias']:
+            param.requires_grad = False
+    # init the fc layer
+    model.fc.weight.data.normal_(mean=0.0, std=0.01)
+    model.fc.bias.data.zero_()
+    
+    # rename moco pre-trained keys
+    state_dict = sd['state_dict']
+    for k in list(state_dict.keys()):
+        # retain only encoder_q up to before the embedding layer
+        if k.startswith('module.encoder_q') and not k.startswith('module.encoder_q.fc'):
+            # remove prefix
+            state_dict[k[len("module.encoder_q."):]] = state_dict[k]
+        # delete renamed or unused k
+        del state_dict[k]
+
+    msg = model.load_state_dict(state_dict, strict=False)
+    assert set(msg.missing_keys) == {"fc.weight", "fc.bias"}
+
     model.eval()
     return model
 
