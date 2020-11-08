@@ -214,6 +214,30 @@ def load_model(args):
             url= 'https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar'
         model = setting.load_swav_models(arch, url)
     
+    elif "pcl" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= 'https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v2_epoch200.pth.tar'
+        model = setting.load_pcl_models(arch, url)
+
+    elif "jigsaw" in arg.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= 'https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v2_epoch200.pth.tar'
+        model = setting.load_pcl_models(arch, url)
+
+    elif "simCLR" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= ''
+        model = setting.load_simclr_models(arch, url)
+
     elif "sela" in args.model:
         arch = args.model.split("_")[1]
         if args.model_path:
