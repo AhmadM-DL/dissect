@@ -73,6 +73,16 @@ def load_m_deep_cluster_models(architecture, url):
     model.eval()
     return model
 
+def load_random_models(architecture):
+    model = models.__dict__[architecture]()
+    model.eval()
+    return model
+
+def load_supervised_models(architecture):
+    model = models.__dict__[architecture](pretrained=True)
+    model.eval()
+    return model
+
 def load_npid_models(architecture, url):
     
     if "http" in url:
