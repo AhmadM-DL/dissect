@@ -222,12 +222,12 @@ def load_model(args):
             url= 'https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v2_epoch200.pth.tar'
         model = setting.load_pcl_models(arch, url)
 
-    elif "jigsaw" in arg.model:
+    elif "jigsaw" in args.model:
         arch = args.model.split("_")[1]
         if args.model_path:
             url= args.model_path
         else:
-            url= 'https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v2_epoch200.pth.tar'
+            url= ''
         model = setting.load_pcl_models(arch, url)
 
     elif "simCLR" in args.model:
