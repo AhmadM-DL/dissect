@@ -110,8 +110,7 @@ def load_moco_models(architecture, url):
     #local url
         sd = torch.load(url)
     
-    model = ssmodels.moco.MoCo(models.__dict__[architecture](),
-                                dim=128, k=65536, m=0.999, t=0.07, mlp= True)
+    model = ssmodels.moco.MoCo(models.__dict__[architecture], dim=128, k=65536, m=0.999, t=0.07, mlp= True)
 
     # deal with a dataparallel table
     def strip_module(key):
