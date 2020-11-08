@@ -99,7 +99,7 @@ def load_npid_models(architecture, url):
     return model
 
 def load_moco_models(architecture, url):
-
+    #ToDo
     if "http" in url:
         # remote url
         try:
@@ -110,7 +110,8 @@ def load_moco_models(architecture, url):
     #local url
         sd = torch.load(url)
     
-    model = models.__dict__[architecture]()
+    model = ssmodels.moco.MoCo(models.__dict__[architecture](),
+                                dim=128, k=65536, m=0.999, t=0.07, mlp= True)
 
     # deal with a dataparallel table
     def strip_module(key):
