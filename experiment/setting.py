@@ -5,6 +5,7 @@ import deep_cluster_models
 import deep_cluster_m_models
 import ssmodels
 import collections
+import torchvision.models as models
 
 def load_proggan(domain):
     # Automatically download and cache progressive GAN model
@@ -85,6 +86,31 @@ def load_npid_models(architecture, url):
         sd = torch.load(url)
     
     model = ssmodels.npid.__dict__[architecture]()
+
+    # deal with a dataparallel table
+    def strip_module(key):
+        if not 'module' in key:
+            return key
+        return ''.join(key.split('module.'))
+    sd = sd["state_dict"]
+    sd = {strip_module(key): val for key, val in sd.items()}
+    model.load_state_dict(sd) 
+    model.eval()
+    return model
+
+def load_moco_models(architecture, url):
+
+    if "http" in url:
+        # remote url
+        try:
+            sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
+        except:
+            sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
+    else:
+    #local url
+        sd = torch.load(url)
+    
+    model = models.__dict__[architecture]
 
     # deal with a dataparallel table
     def strip_module(key):
