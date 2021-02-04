@@ -252,7 +252,7 @@ def load_model(args):
             url= args.model_path
         else:
             url= 'https://dl.fbaipublicfiles.com/deepcluster/selav2_400ep_pretrain.pth.tar'
-        model = setting.load_sela_v2_models(arch, url) 
+        model = setting.load_sela_models(arch, url) 
     
     elif "sela_" in args.model:
         arch = args.model.split("_")[1]
