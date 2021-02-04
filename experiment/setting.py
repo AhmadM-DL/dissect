@@ -265,7 +265,7 @@ def load_infomax_models(architecture, url):
         sd = torch.load(url)
     sd = sd["model"]
 
-    model = ssmodels.infomax.build_backbone.build_model(infomax_opt)
+    model, _ = ssmodels.infomax.build_backbone.build_model(infomax_opt)
 
     if modal == 'RGB':
         # Unimodal (RGB) case
