@@ -27,8 +27,7 @@ def parseargs():
     args = parser.parse_args()
     return args
 
-def main():
-    args = parseargs()
+def main(args):
     resdir =  os.path.join(args.output_dir, '%s-%s-%s' % (args.model, args.dataset, args.seg)) 
     if args.layer is not None:
         resdir += '-' + args.layer
@@ -392,5 +391,6 @@ def copy_static_file(source, target):
     shutil.copy(sourcefile, target)
 
 if __name__ == '__main__':
-    main()
+    args = parseargs()
+    main(args)
 
