@@ -281,6 +281,14 @@ def load_model(args):
             url= 'https://dl.fbaipublicfiles.com/deepcluster/'+arch+'/checkpoint.pth.tar'
         model = setting.load_deep_cluster_models(arch, url)
 
+    elif "dcv2_" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= 'https://dl.fbaipublicfiles.com/deepcluster/deepclusterv2_800ep_pretrain.pth.tar'
+        model = setting.load_deep_cluster_models(arch, url)
+    
     model = nethook.InstrumentedModel(model).cuda().eval()
     return model
 

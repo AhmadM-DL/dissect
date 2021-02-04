@@ -240,6 +240,36 @@ def load_swav_models(architecture, url):
     model.eval()
     return model
 
+def load_deep_cluster_v2_models(architecture, url):
+
+    if "http" in url:
+        # remote url
+        try:
+            sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
+        except:
+            sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
+    else:
+    #local url
+        sd = torch.load(url)
+    
+    model = ssmodels.swav.__dict__[architecture](
+        normalize=True,
+        hidden_mlp=2048,
+        output_dim=128,
+        nmb_prototypes=[3000,3000,3000],
+    )
+
+    # deal with a dataparallel table
+    def strip_module(key):
+        if not 'module' in key:
+            return key
+        return ''.join(key.split('module.'))
+
+    sd = {strip_module(key): val for key, val in sd.items()}
+    model.load_state_dict(sd) 
+    model.eval()
+    return model
+
 def load_deep_cluster_models(architecture, url):
 
     if "http" in url:
@@ -254,7 +284,6 @@ def load_deep_cluster_models(architecture, url):
 
     # size of the top layer
     N = sd['state_dict']['top_layer.bias'].size()
-
 
     # build skeleton of the model
     sob = 'sobel.0.weight' in sd['state_dict'].keys()
