@@ -287,7 +287,7 @@ def load_model(args):
             url= args.model_path
         else:
             url= 'https://dl.fbaipublicfiles.com/deepcluster/deepclusterv2_800ep_pretrain.pth.tar'
-        model = setting.load_deep_cluster_models(arch, url)
+        model = setting.load_deep_cluster_v2_models(arch, url)
     
     model = nethook.InstrumentedModel(model).cuda().eval()
     return model
