@@ -252,7 +252,15 @@ def load_model(args):
             url= args.model_path
         else:
             url= 'http://www.robots.ox.ac.uk/~vgg/research/self-label/asset/new_models/resnet50-10x3k_pp.pth'
-        model = setting.load_sela_models(arch, url)        
+        model = setting.load_sela_models(arch, url)  
+
+    elif "selav2" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= 'https://dl.fbaipublicfiles.com/deepcluster/selav2_400ep_pretrain.pth.tar'
+        model = setting.load_sela_v2_models(arch, url)   
 
     elif "moco" in args.model:
         arch = args.model.split("_")[1]
