@@ -240,7 +240,7 @@ def load_swav_models(architecture, url):
     model.eval()
     return model
 
-def load_sela_models(architecture, url):
+def load_sela_v2_models(architecture, url):
     
     if "http" in url:
         # remote url
