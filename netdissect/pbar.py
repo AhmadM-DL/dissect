@@ -16,7 +16,7 @@ try:
 except:
     tqdm = None
 
-default_verbosity = False
+default_verbosity = True
 next_description = None
 python_print = builtins.print
 
@@ -71,9 +71,9 @@ def tqdm_terminal(it, *args, **kwargs):
     '''
     Some settings for tqdm that make it run better in resizable terminals.
     '''
-    return tqdm(it, *args, dynamic_ncols=True, ascii=True,
-                leave=(innermost_tqdm() is not None), **kwargs)
-
+#     return tqdm(it, *args, dynamic_ncols=True, ascii=True,
+#                 leave=(innermost_tqdm() is not None), **kwargs)
+    return tqdm(it, *args, dynamic_ncols=True, ascii=True, position=0, leave=True, **kwargs)
 
 def in_notebook():
     '''
