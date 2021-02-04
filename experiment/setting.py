@@ -270,7 +270,7 @@ def load_infomax_models(architecture, url):
     if modal == 'RGB':
         # Unimodal (RGB) case
         encoder_state_dict = OrderedDict()
-        for k, v in state_dict.items():
+        for k, v in sd.items():
             k = k.replace('module.', '')
             if 'encoder' in k:
                 k = k.replace('encoder.', '')
@@ -280,7 +280,7 @@ def load_infomax_models(architecture, url):
         # Multimodal (CMC) case
         encoder1_state_dict = OrderedDict()
         encoder2_state_dict = OrderedDict()
-        for k, v in state_dict.items():
+        for k, v in sd.items():
             k = k.replace('module.', '')
             if 'encoder1' in k:
                 k = k.replace('encoder1.', '')
