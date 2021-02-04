@@ -240,6 +240,58 @@ def load_swav_models(architecture, url):
     model.eval()
     return model
 
+class infomax_opt:
+    arch = "resnet50"
+    method = "InfoMin"
+    modal = "RGB"
+    jigsaw = True
+    mem = "moco"
+    aug = 'D' 
+    head = 'mlp'
+    nce_t =  0.15
+    feat_dim = 128
+
+def load_infomax_models(architecture, url):
+    modal = "RGB"
+    if "http" in url:
+        # remote url
+        try:
+            sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
+        except:
+            sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
+    else:
+    #local url
+        sd = torch.load(url)
+    sd = sd["model"]
+
+    m = ssmodels.infomax.build_backbone.build_model(infomax_opt)
+
+    if modal == 'RGB':
+        # Unimodal (RGB) case
+        encoder_state_dict = OrderedDict()
+        for k, v in state_dict.items():
+            k = k.replace('module.', '')
+            if 'encoder' in k:
+                k = k.replace('encoder.', '')
+                encoder_state_dict[k] = v
+        model.encoder.load_state_dict(encoder_state_dict)
+    else:
+        # Multimodal (CMC) case
+        encoder1_state_dict = OrderedDict()
+        encoder2_state_dict = OrderedDict()
+        for k, v in state_dict.items():
+            k = k.replace('module.', '')
+            if 'encoder1' in k:
+                k = k.replace('encoder1.', '')
+                encoder1_state_dict[k] = v
+            if 'encoder2' in k:
+                k = k.replace('encoder2.', '')
+                encoder2_state_dict[k] = v
+        model.encoder1.load_state_dict(encoder1_state_dict)
+        model.encoder2.load_state_dict(encoder2_state_dict)
+
+    return model
+
 def load_sela_v2_models(architecture, url):
     
     if "http" in url:

@@ -297,6 +297,14 @@ def load_model(args):
             url= 'https://dl.fbaipublicfiles.com/deepcluster/deepclusterv2_800ep_pretrain.pth.tar'
         model = setting.load_deep_cluster_v2_models(arch, url)
     
+    elif "infomax_" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= 'https://uc66f9ba96803815b4e03bedd473.dl.dropboxusercontent.com/cd/0/get/BIT9LOurKc7ynGIi9_lv6CPoDF-NLW4-NDc_MqePyVAY8QQh2s3Yz6Zg9WJCNa_CYKpi4ge7u9BTvLZTH3tFxQ9gX4ejTEQVUNdAR1Ie1XBmtWTnKWiaPKuWmSBhJTFIe6s/file?_download_id=019700423140138645822466014310099868483434900982898758624353033122&_notify_domain=www.dropbox.com&dl=1'
+        model = setting.load_infomax_models(arch, url)
+
     model = nethook.InstrumentedModel(model).cuda().eval()
     return model
 
