@@ -189,7 +189,7 @@ def instrumented_layername(args):
         elif args.model == "m_dc_alexnet":
             return 'features.'+ args.layer
         elif args.model == "infomax_resnet50":
-            return "encoder.layer4"
+            return "encoder." + args.layer
         return args.layer
     # Default layers to probe
     if args.model == 'alexnet':
