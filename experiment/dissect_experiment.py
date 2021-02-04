@@ -4,7 +4,7 @@ from collections import defaultdict
 from netdissect import pbar, nethook, renormalize, pidfile, zdataset
 from netdissect import upsample, tally, imgviz, imgsave, bargraph
 import os
-from . import setting
+import setting
 import netdissect
 torch.backends.cudnn.benchmark = True
 
