@@ -252,14 +252,19 @@ def load_sela_v2_models(architecture, url):
     #local url
         sd = torch.load(url)
     
-    model = models.__dict__[architecture](pretrained=False, num_classes=3000)
+    model = ssmodels.swav.__dict__[architecture](
+        normalize=True,
+        hidden_mlp=2048,
+        output_dim=128,
+        nmb_prototypes=[3000, 3000, 3000]
+    )
 
     # deal with a dataparallel table
     def strip_module(key):
         if not 'module' in key:
             return key
         return ''.join(key.split('module.'))
-    #sd = sd["state_dict"]
+
     sd = {strip_module(key): val for key, val in sd.items()}
     model.load_state_dict(sd) 
     model.eval()
