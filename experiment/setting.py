@@ -6,6 +6,7 @@ import deep_cluster_m_models
 import ssmodels
 import collections
 import torchvision.models as models
+from collections import OrderedDict
 
 def load_proggan(domain):
     # Automatically download and cache progressive GAN model
