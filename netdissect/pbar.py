@@ -16,7 +16,7 @@ try:
 except:
     tqdm = None
 
-default_verbosity = True
+default_verbosity = False
 next_description = None
 python_print = builtins.print
 
