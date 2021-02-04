@@ -60,7 +60,7 @@ class RGBMultiHeads(RGBSingleHead):
                                    dim_out=feat_dim,
                                    head=head)
 
-    def forward(self, x, x_jig=None, mode=0):
+    def forward(self, x, x_jig=None, mode=2):
         # mode --
         # 0: normal encoder,
         # 1: momentum encoder,
