@@ -428,7 +428,7 @@ def load_insdis_models(architecture, url):
     #local url
         sd = torch.load(url)
     
-    sd = sd[["state_dict"]]
+    sd = sd["state_dict"]
     
     model = ssmodels.insdis.__dict__[architecture](low_dim=128)
 
