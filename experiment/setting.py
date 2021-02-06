@@ -417,6 +417,30 @@ def load_deep_cluster_models(architecture, url):
     model.eval()
     return model
 
+def load_insdis_models(architecture, url):
+    if "http" in url:
+        # remote url
+        try:
+            sd = torch.hub.load_state_dict_from_url(url) # pytorch 1.1
+        except:
+            sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
+    else:
+    #local url
+        sd = torch.load(url)
+    
+    model = ssmodels.insdis.__dict__[architecture](low_dim=128)
+
+    # deal with a dataparallel table
+    def strip_module(key):
+        if not 'module' in key:
+            return key
+        return ''.join(key.split('module.'))
+
+    sd = {strip_module(key): val for key, val in sd.items()}
+    model.load_state_dict(sd) 
+    model.eval()
+    return model
+    
 def load_classifier(architecture):
     model_factory = dict(
             alexnet=oldalexnet.AlexNet,

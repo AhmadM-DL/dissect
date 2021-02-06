@@ -207,6 +207,14 @@ def load_model(args):
     elif args.model == 'progan':
         model = setting.load_proggan(args.dataset)
 
+    elif "insdis" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url = args.model_path
+        else:
+            url= 'https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar'
+        model = setting.load_insdis_models(arch, url)
+
     elif "swav" in args.model:
         arch = args.model.split("_")[1]
         if args.model_path:
