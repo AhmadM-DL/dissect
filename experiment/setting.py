@@ -426,7 +426,9 @@ def load_insdis_models(architecture, url):
             sd = torch.hub.model_zoo.load_url(url) # pytorch 1.0
     else:
     #local url
-        sd = torch.load(url)["state_dict"]
+        sd = torch.load(url)
+    
+    sd = sd[["state_dict"]]
     
     model = ssmodels.insdis.__dict__[architecture](low_dim=128)
 
