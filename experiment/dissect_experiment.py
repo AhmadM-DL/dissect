@@ -215,7 +215,15 @@ def load_model(args):
             url= 'https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar'
         model = setting.load_swav_models(arch, url)
     
-    elif "pcl" in args.model:
+    elif "pcl_" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= 'https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v1_epoch200.pth.tar'
+        model = setting.load_pcl_models(arch, url)
+
+    elif "pclv2_" in args.model:
         arch = args.model.split("_")[1]
         if args.model_path:
             url= args.model_path
