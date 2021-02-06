@@ -212,7 +212,7 @@ def load_model(args):
         if args.model_path:
             url = args.model_path
         else:
-            url= 'https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar'
+            url= 'https://frontiers.blob.core.windows.net/pretraining/checkpoints/pil_pretrained_models/lemniscate/lemniscate_resnet50_update.pth'
         model = setting.load_insdis_models(arch, url)
 
     elif "swav" in args.model:
