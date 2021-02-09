@@ -24,6 +24,8 @@ def parseargs():
     aa('--thumbsize', type=int, default=100)
     aa('--model_path', type=str, default=None)
     aa("--output_dir", type=str, default="results")
+    aa("--width_multiplier", type=int, default=1)
+    aa("--sk_ratio", type=int, default=0)
     args = parser.parse_args()
     return args
 
@@ -260,8 +262,8 @@ def load_model(args):
         if args.model_path:
             url= args.model_path
         else:
-            url= ''
-        model = setting.load_simclr_models(arch, url)
+            print("SimCLR requiers a local checkpoint path")
+        model = setting.load_simclr_models(arch, url, args.width_multiplier, args.sk_ratio)
 
     elif "selav2_" in args.model:
         arch = args.model.split("_")[1]

@@ -7,6 +7,7 @@ import ssmodels
 import collections
 import torchvision.models as models
 from collections import OrderedDict
+import re
 
 def load_proggan(domain):
     # Automatically download and cache progressive GAN model
@@ -442,7 +443,23 @@ def load_insdis_models(architecture, url):
     model.load_state_dict(sd) 
     model.eval()
     return model
-    
+
+def load_simclr_models(architecture, url, width, sk_ratio):
+    # Get Weights
+    sd = torch.load(url)
+    sd = sd["resnet"]
+
+    #Build Model
+    depth =  int(re.findall(r'\d+', architecture)[0])
+    model, _=  ssmodels.simclr.resnet.get_resnet(depth, width, sk_ratio)
+
+    #Load weights to model
+    model.load_state_dict(sd)
+
+    model.eval()
+    return model
+
+
 def load_classifier(architecture):
     model_factory = dict(
             alexnet=oldalexnet.AlexNet,
