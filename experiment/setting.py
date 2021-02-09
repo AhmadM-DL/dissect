@@ -445,7 +445,9 @@ def load_insdis_models(architecture, url):
     return model
 
 def load_simclr_models(architecture, url, width, sk_ratio):
+    
     sk_ratio = 0.0625 if sk_ratio==1 else 0
+
     # Get Weights
     sd = torch.load(url)
     sd = sd["resnet"]
