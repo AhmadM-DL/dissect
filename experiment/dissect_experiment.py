@@ -281,12 +281,20 @@ def load_model(args):
             url= 'http://www.robots.ox.ac.uk/~vgg/research/self-label/asset/new_models/resnet50-10x3k_pp.pth'
         model = setting.load_sela_models(arch, url)    
 
-    elif "moco" in args.model:
+    elif "mocov2_" in args.model:
         arch = args.model.split("_")[1]
         if args.model_path:
             url= args.model_path
         else:
             url= 'https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar'
+        model = setting.load_moco_models(arch, url)
+    
+    elif "moco_" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+            url= 'https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v1_200ep/moco_v1_200ep_pretrain.pth.tar'
         model = setting.load_moco_models(arch, url)
         
     elif "npid" in args.model:
