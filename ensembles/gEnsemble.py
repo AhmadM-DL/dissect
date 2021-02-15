@@ -171,8 +171,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    description =
-    """
+    description = """
     A module to merge features of multiple unsupervised deep learning models.
     The modile takes a list of strings representing the models to merge.
     The module will train a FC classifier on top of the features on Imagenet
