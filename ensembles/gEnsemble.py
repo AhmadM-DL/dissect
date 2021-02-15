@@ -10,14 +10,15 @@ MODELS = ["", "", ""]
 SEPERATOR = "|"
 
 
-def get_features_model(model):
+def get_features_model(model, device):
     if "swav_resnet50" == model.lower():
         class args:
             model = "swav_resnet50"
             model_path = None
         model = load_model(args).model
         model = torch.nn.Sequential(*(list(model.children())[:-2]))
-        output_size = model(torch.rand( (1, 3, 244, 244) )).shape[1]
+        output_size = model(torch.rand(
+            (1, 3, 244, 244), device=device)).shape[1]
         return model, output_size
     if "supervised_resnet50" == model.lower():
         class args:
@@ -25,7 +26,8 @@ def get_features_model(model):
             model_path = None
         model = load_model(args).model
         model = torch.nn.Sequential(*(list(model.children())[:-1]))
-        output_size = model(torch.rand((1, 3, 244, 244))).shape[1]
+        output_size = model(torch.rand(
+            (1, 3, 244, 244), device=device)).shape[1]
         return model, output_size
 
 
@@ -121,14 +123,16 @@ class Ensemble2(torch.nn.Module):
 
 
 def main(args):
+    logging.info("Initialize device")
+    device = torch.device(ags.device)
     models = args.models.split(SEPERATOR)
     logging.info("Downloading models")
-    models = [get_features_model(m) for m in models]
+    models = [get_features_model(m, device) for m in models]
     logging.info("Building Ensemble")
     if len(models) == 2:
         fc_layers = [models[0][1]+models[0][1], 1000]
         ensemble = Ensemble2(
-            models[0][0], models[1][0], fc_layers, args.device, args.dropout_rate)
+            models[0][0], models[1][0], fc_layers, device, args.dropout_rate)
     else:
         raise Exception("Such number of models is not supported yet")
 
