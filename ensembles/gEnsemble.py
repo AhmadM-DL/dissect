@@ -61,7 +61,7 @@ class Ensemble2(torch.nn.Module):
             param.requires_grad = False
 
     def _classifier_from_list(self, layers_sizes, dropout_rate=0.5):
-        fc_layers = []0
+        fc_layers = []
         for s1, s2 in zip(layers_sizes, layers_sizes[1:]):
             if dropout_rate:
                 fc.layers.append(torch.nn.Dropout(dropout_rate))
