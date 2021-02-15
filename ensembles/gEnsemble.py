@@ -124,7 +124,7 @@ class Ensemble2(torch.nn.Module):
 
 def main(args):
     logging.info("Initialize device")
-    device = torch.device(ags.device)
+    device = torch.device(args.device)
     models = args.models.split(SEPERATOR)
     logging.info("Downloading models")
     models = [get_features_model(m, device) for m in models]
