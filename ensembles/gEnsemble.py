@@ -191,7 +191,7 @@ if __name__ == '__main__':
                         default=0.9, help="Optimizer Momentum")
     parser.add_argument("--wd", type=float, default=0.0001,
                         help="Optimizer Weight Decay")
-    parser.add_argument("--n_epochs", type=int, default=30,
+    parser.add_argument("--n_epochs", type=int, default=100,
                         help="Number of epochs")
     parser.add_argument("--batch_size", type=int,
                         default=256, help="Training Batch Size")
