@@ -10,15 +10,14 @@ MODELS = ["", "", ""]
 SEPERATOR = "|"
 
 
-def get_features_model(model, device):
+def get_features_model(model):
     if "swav_resnet50" == model.lower():
         class args:
             model = "swav_resnet50"
             model_path = None
         model = load_model(args).model
         model = torch.nn.Sequential(*(list(model.children())[:-2]))
-        output_size = model(torch.rand(
-            (1, 3, 244, 244), device=device)).shape[1]
+        output_size = model(torch.rand( (1, 3, 244, 244) )).shape[1]
         return model, output_size
     if "supervised_resnet50" == model.lower():
         class args:
@@ -26,8 +25,7 @@ def get_features_model(model, device):
             model_path = None
         model = load_model(args).model
         model = torch.nn.Sequential(*(list(model.children())[:-1]))
-        output_size = model(torch.rand(
-            (1, 3, 244, 244), device=device)).shape[1]
+        output_size = model(torch.rand((1, 3, 244, 244))).shape[1]
         return model, output_size
 
 
