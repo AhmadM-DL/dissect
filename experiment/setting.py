@@ -85,6 +85,16 @@ def load_supervised_models(architecture):
     model.eval()
     return model
 
+def load_common_models(architecture, url):
+
+    model = models.__dict__[architecture](pretrained=False)
+    del model.fc
+
+    state_dict = torch.load(url)
+    model.load_state_dict(state_dict)
+    model.eval()
+    return model
+
 def load_npid_models(architecture, url):
     
     if "http" in url:
