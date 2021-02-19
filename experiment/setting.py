@@ -88,7 +88,7 @@ def load_supervised_models(architecture):
 def load_common_models(architecture, url):
 
     model = models.__dict__[architecture](pretrained=False)
-    del model.fc
+    #del model.fc
 
     state_dict = torch.load(url)
     model.load_state_dict(state_dict)
