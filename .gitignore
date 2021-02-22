@@ -1,4 +1,5 @@
 *.pyc
+/ensembles/*.log
 /datasets
 /results
 /notebooks/datasets
@@ -15,3 +16,5 @@ __pycache__
 .nfs*
 .*swp
 .idea
+*.out
+/ensembles/runs
