@@ -1,5 +1,6 @@
 from experiment.dissect_experiment import load_model
 from torchvision.datasets.imagenet import ImageNet
+from torchvision import transforms
 from torch.utils.tensorboard import SummaryWriter
 import torch
 import argparse
