@@ -1,7 +1,7 @@
 from experiment.dissect_experiment import load_model
 from torchvision.datasets.imagenet import ImageNet
-from torchvision import transforms
 from torch.utils.tensorboard import SummaryWriter
+from torchvision import transforms
 import torch
 import argparse
 import logging
@@ -138,13 +138,28 @@ def main(args):
         raise Exception("Such number of models is not supported yet")
 
     logging.info("Setting up image transformations")
-    transform = transforms.Compose([
-    transforms.ToTensor()
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
+    
+    train_transform = transforms.Compose([
+        transforms.RandomResizedCrop(224),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        normalize
+    ])
+
+    val_transform = transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        normalize,
     ])
 
     logging.info("Initializing Imagenet Dataset")
-    imagenet_train = ImageNet(root=args.imagenet, split="train", transform=transform)
-    imagenet_valid = ImageNet(root=args.imagenet, split="val", transform=transform)
+    imagenet_train = ImageNet(
+        root=args.imagenet, split="train", transform=train_transform)
+    imagenet_valid = ImageNet(
+        root=args.imagenet, split="val", transform=val_transform)
 
     logging.info("Initializing Dataloaders")
     train_dataloader = torch.utils.data.DataLoader(
@@ -152,7 +167,8 @@ def main(args):
     valid_dataloader = torch.utils.data.DataLoader(
         imagenet_valid, batch_size=args.batch_size, shuffle=False)
 
-    logging.info("Initializing Optimizer (lr: %f, mom:%f, wd:%f)"%(args.lr, args.momentum, args.wd))
+    logging.info("Initializing Optimizer (lr: %f, mom:%f, wd:%f)" %
+                 (args.lr, args.momentum, args.wd))
     optimizer = torch.optim.SGD(
         filter(lambda x: x.requires_grad, ensemble.parameters()),
         lr=args.lr,
@@ -162,12 +178,13 @@ def main(args):
 
     # Define experiment tensorboard writer
     writer = SummaryWriter(log_dir=args.log_dir+"/"+args.models)
-    logging.info("Writing training logs to %s"%writer)
+    logging.info("Writing training logs to %s" % writer)
 
     # Train/Validate on Imagenet
-    logging.info("Start Training for %d epochs"%args.n_epochs)
+    logging.info("Start Training for %d epochs" % args.n_epochs)
     for i in range(args.n_epochs):
         logging.info("Epoch %d: " % i)
+
         loss = ensemble.train_(optimizer, train_dataloader,
                                torch.nn.CrossEntropyLoss())
         acc1, acc5, valid_loss = ensemble.val(
