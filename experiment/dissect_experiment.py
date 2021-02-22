@@ -192,6 +192,7 @@ def instrumented_layername(args):
         elif args.model == "infomax_resnet50":
             return "encoder." + args.layer
         return args.layer
+
     # Default layers to probe
     if args.model == 'alexnet':
         return 'conv5'
@@ -263,7 +264,7 @@ def load_model(args):
             url= args.model_path
         else:
             print("SimCLR requiers a local checkpoint path")
-        model = setting.load_simclr_models(arch, url, args.width_multiplier, args.sk_ratio)
+        model = setting.load_common_models(arch, url)
 
     elif "selav2_" in args.model:
         arch = args.model.split("_")[1]
@@ -303,7 +304,8 @@ def load_model(args):
             url= args.model_path
         else:
             url= 'https://frontiers.blob.core.windows.net/pretraining/checkpoints/pil_pretrained_models/lemniscate/lemniscate_resnet50_update.pth'
-        model = setting.load_npid_models(arch, url)        
+        model = setting.load_npid_models(arch, url)  
+
     elif "m_dc_" in args.model:
         arch = args.model.split("_")[2]
         model = setting.load_m_deep_cluster_models(arch, args.model_path)
@@ -332,6 +334,22 @@ def load_model(args):
             url= 'https://uc66f9ba96803815b4e03bedd473.dl.dropboxusercontent.com/cd/0/get/BIT9LOurKc7ynGIi9_lv6CPoDF-NLW4-NDc_MqePyVAY8QQh2s3Yz6Zg9WJCNa_CYKpi4ge7u9BTvLZTH3tFxQ9gX4ejTEQVUNdAR1Ie1XBmtWTnKWiaPKuWmSBhJTFIe6s/file?_download_id=019700423140138645822466014310099868483434900982898758624353033122&_notify_domain=www.dropbox.com&dl=1'
         model = setting.load_infomax_models(arch, url)
 
+    elif "pirl" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+           print("PIRL requires a local checkpoint path")
+        model = setting.load_common_models(arch, url)
+
+    elif "byol" in args.model:
+        arch = args.model.split("_")[1]
+        if args.model_path:
+            url= args.model_path
+        else:
+           print("BYOL requires a local checkpoint path")
+        model = setting.load_common_models(arch, url)
+    
     model = nethook.InstrumentedModel(model).cuda().eval()
     return model
 

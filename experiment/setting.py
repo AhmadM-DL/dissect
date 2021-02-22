@@ -85,6 +85,12 @@ def load_supervised_models(architecture):
     model.eval()
     return model
 
+def load_common_models(architecture, url):
+
+    model = ssmodels.common.ResNetBackbone(architecture, url)
+    model.model.eval()
+    return model
+
 def load_npid_models(architecture, url):
     
     if "http" in url:
