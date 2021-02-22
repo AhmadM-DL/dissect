@@ -87,12 +87,8 @@ def load_supervised_models(architecture):
 
 def load_common_models(architecture, url):
 
-    model = models.__dict__[architecture](pretrained=False)
-    #del model.fc
-
-    state_dict = torch.load(url)
-    model.load_state_dict(state_dict)
-    model.eval()
+    model = ssmodels.common.ResNetBackbone(architecture, url)
+    model.model.eval()
     return model
 
 def load_npid_models(architecture, url):
