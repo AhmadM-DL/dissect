@@ -136,9 +136,14 @@ def main(args):
     else:
         raise Exception("Such number of models is not supported yet")
 
+    logging.info("Setting up image transformations")
+    transform = transforms.Compose([
+    transforms.ToTensor()
+    ])
+
     logging.info("Initializing Imagenet Dataset")
-    imagenet_train = ImageNet(root=args.imagenet, split="train")
-    imagenet_valid = ImageNet(root=args.imagenet, split="val")
+    imagenet_train = ImageNet(root=args.imagenet, split="train", transform=transform)
+    imagenet_valid = ImageNet(root=args.imagenet, split="val", transform=transform)
 
     logging.info("Initializing Dataloaders")
     train_dataloader = torch.utils.data.DataLoader(

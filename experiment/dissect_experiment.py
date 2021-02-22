@@ -192,6 +192,7 @@ def instrumented_layername(args):
         elif args.model == "infomax_resnet50":
             return "encoder." + args.layer
         return args.layer
+
     # Default layers to probe
     if args.model == 'alexnet':
         return 'conv5'
