@@ -1,5 +1,6 @@
 from torch import nn
 import torchvision.models as models
+import torch
 
 class ResNetBackbone(nn.Module):
     def __init__(self, architecture, path):
