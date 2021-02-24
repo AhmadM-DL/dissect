@@ -112,7 +112,7 @@ class Ensemble2(torch.nn.Module):
             times.append(time.time()-end)
             if i%10==0:
                 print("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
-                logging.info("%d/%d"%(i, len(train_dataloader), np.average(times)))
+                logging.info("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
         return np.average(losses)
 
     def _accuracy(self, output, target, topk=(1,)):
@@ -136,7 +136,9 @@ class Ensemble2(torch.nn.Module):
         accuracies_1 = []
         accuracies_5 = []
         losses = []
+        times = []
         for i, (input, target) in enumerate(val_dataloader):
+            end = time.time()
             input = input.to(self.device)
             target = target.to(self.device)
             output = self(input)
@@ -148,6 +150,11 @@ class Ensemble2(torch.nn.Module):
             accuracies_1.append(acc1.item())
             accuracies_5.append(acc5.item())
             losses.append(loss.item())
+
+            times.append(time.time()-end)
+            if i%10==0:
+                print("%d/%d  avg.time(%f)"%(i, len(val_dataloader), np.average(times)))
+                logging.info("%d/%d  avg.time(%f)"%(i, len(val_dataloader), np.average(times)))
 
         return np.average(accuracies_1), np.average(accuracies_5), np.average(losses)
 
@@ -213,7 +220,7 @@ def main(args):
     logging.info("Writing training logs to %s" % writer)
 
     # Train/Validate on Imagenet
-    logging.info("Start Training for %d epochs" % args.n_epochs)
+    logging.info("Start Training for %d epochs from %d" % (args.n_epochs, continue_from_epoch))
     for i in range(continue_from_epoch, args.n_epochs):
         logging.info("Epoch %d: " % i)
 
