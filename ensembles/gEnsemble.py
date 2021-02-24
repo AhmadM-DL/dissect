@@ -2,7 +2,7 @@ from experiment.dissect_experiment import load_model
 from torchvision.datasets.imagenet import ImageNet
 from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms
-import np
+import numpy as np
 import torch
 import argparse
 import logging
