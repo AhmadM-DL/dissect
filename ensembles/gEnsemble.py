@@ -2,10 +2,12 @@ from experiment.dissect_experiment import load_model
 from torchvision.datasets.imagenet import ImageNet
 from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms
+import np
 import torch
 import argparse
 import logging
 import sys
+import time
 
 MODELS = ["", "", ""]
 SEPERATOR = "|"
@@ -72,7 +74,9 @@ class Ensemble2(torch.nn.Module):
     def train_(self, optimizer, train_dataloader, loss_fn):
         self.train()
         losses = []
+        times = []
         for i, (input, target) in enumerate(train_dataloader):
+            end = time.time()
             input = input.to(self.device)
             target = target.to(self.device)
             output = self(input)
@@ -83,7 +87,10 @@ class Ensemble2(torch.nn.Module):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-
+            times.append(time.time()-end)
+            if i%10==0:
+                print("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
+                logging.info("%d/%d"%(i, len(train_dataloader), np.average(times)))
         return np.average(losses)
 
     def _accuracy(self, output, target, topk=(1,)):
