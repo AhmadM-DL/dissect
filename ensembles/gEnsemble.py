@@ -233,6 +233,8 @@ def main(args):
         writer.add_scalars('acc/acc1', acc1, i)
         writer.add_scalars('acc/acc5', acc2, i)
 
+        ensemble.save(i, optimizer)
+
 
 if __name__ == '__main__':
     description = """
