@@ -8,9 +8,11 @@ import argparse
 import logging
 import sys
 import time
+import os
 
 MODELS = ["", "", ""]
 SEPERATOR = "|"
+CHECKPOINT = "./checkpoint.pth.tar"
 
 
 def get_features_model(model, device):
@@ -46,8 +48,8 @@ class Ensemble2(torch.nn.Module):
         self.model_1.to(device)
         self.model_2.to(device)
 
-        self.classifier = self._classifier_from_list(
-            fc_layers, dropout_rate=dropout_rate)
+        self.fc_layers = fc_layers
+        self.classifier = self._classifier_from_list(fc_layers, dropout_rate=dropout_rate)
         self.classifier.to(device)
         self.device = device
 
@@ -58,6 +60,26 @@ class Ensemble2(torch.nn.Module):
         x = x.view(x.shape[0], -1)
         x = self.classifier(x)
         return x
+
+    def save(self, epoch, optimizer, path=CHECKPOINT):
+        torch.save({
+            "epoch": epoch,
+            'fc_layers': self.fc_layers, 
+            'classifier': self.classifier.state_dict(),
+            'optimizer': optimizer.state_dict()
+        }, path)
+    
+    def resume(self, optimizer, path=CHECKPOINT):
+        if os.path.isfile(path):
+            print("Loading Checkpoint: Found a checkpoint")
+            checkpoint = torch.load(path)
+            continue_from_epoch = checkpoint["epoch"] + 1
+            self.classifier.load_state_dict(checkpoint["classifier"])
+            optimizer.load_state_dict(checkpoint["optimizer"])
+            return (continue_from_epoch, optimizer)
+        else:
+            print("Loading Checkpoint: No Checkpoint was found")
+            return (0, optimizer)
 
     def _freeze(self, module):
         for param in module.parameters():
@@ -183,13 +205,16 @@ def main(args):
         weight_decay=args.wd
     )
 
+    logging.info("Check checkpoint available")
+    continue_from_epoch, optimizer =  ensemble.resume(optimizer)
+
     # Define experiment tensorboard writer
     writer = SummaryWriter(log_dir=args.log_dir+"/"+args.models)
     logging.info("Writing training logs to %s" % writer)
 
     # Train/Validate on Imagenet
     logging.info("Start Training for %d epochs" % args.n_epochs)
-    for i in range(args.n_epochs):
+    for i in range(continue_from_epoch, args.n_epochs):
         logging.info("Epoch %d: " % i)
 
         loss = ensemble.train_(optimizer, train_dataloader,
