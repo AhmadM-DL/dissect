@@ -109,10 +109,12 @@ class Ensemble2(torch.nn.Module):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            times.append(time.time()-end)
-            if i%10==0:
-                print("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
-                logging.info("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
+            
+            batch_time = time.time()-end
+            times.append(batch_time)
+            if i%5==0:
+                print("%d/%d  time(%f) avg.time(%f)"%(i, len(train_dataloader), batch_time, np.average(times)))
+                l#ogging.info("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
         return np.average(losses)
 
     def _accuracy(self, output, target, topk=(1,)):
@@ -147,14 +149,15 @@ class Ensemble2(torch.nn.Module):
             acc1, acc5 = self._accuracy(output.data, target, topk=(1, 5))
             loss = loss_fn(output, target)
 
-            accuracies_1.append(acc1.item())
-            accuracies_5.append(acc5.item())
+            accuracies_1.append(acc1)
+            accuracies_5.append(acc5)
             losses.append(loss.item())
 
-            times.append(time.time()-end)
-            if i%10==0:
-                print("%d/%d  avg.time(%f)"%(i, len(val_dataloader), np.average(times)))
-                logging.info("%d/%d  avg.time(%f)"%(i, len(val_dataloader), np.average(times)))
+            batch_time = time.time()-end
+            times.append(batch_time)
+            if i%5==0:
+                print("%d/%d  time(%f) avg.time(%f)"%(i, len(val_dataloader), batch_time, np.average(times)))
+                #logging.info("%d/%d  avg.time(%f)"%(i, len(val_dataloader), np.average(times)))
 
         return np.average(accuracies_1), np.average(accuracies_5), np.average(losses)
 
@@ -226,6 +229,9 @@ def main(args):
 
         loss = ensemble.train_(optimizer, train_dataloader,
                                torch.nn.CrossEntropyLoss())
+                               
+        ensemble.save(i, optimizer)
+    
         acc1, acc5, valid_loss = ensemble.val(
             valid_dataloader, torch.nn.CrossEntropyLoss())
 
@@ -233,7 +239,7 @@ def main(args):
         writer.add_scalars('acc/acc1', acc1, i)
         writer.add_scalars('acc/acc5', acc2, i)
 
-        ensemble.save(i, optimizer)
+        
 
 
 if __name__ == '__main__':
