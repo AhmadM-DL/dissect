@@ -114,7 +114,7 @@ class Ensemble2(torch.nn.Module):
             
             batch_time = time.time()-end
             times.append(batch_time)
-            if i%100==0:
+            if i%1==0:
                 #print("%d/%d  time(%f) avg.time(%f)"%(i, len(train_dataloader), batch_time, np.average(times)))
                 logging.info("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
         return np.average(losses)
@@ -142,6 +142,8 @@ class Ensemble2(torch.nn.Module):
         losses = []
         times = []
         for i, (input, target) in enumerate(val_dataloader):
+            if i == 20:
+                break
             end = time.time()
             input = input.to(self.device)
             target = target.to(self.device)
@@ -157,9 +159,9 @@ class Ensemble2(torch.nn.Module):
 
             batch_time = time.time()-end
             times.append(batch_time)
-            if i%100==0:
+            if i%1==0:
                 #print("%d/%d  time(%f) avg.time(%f)"%(i, len(val_dataloader), batch_time, np.average(times)))
-                logging.info("%d/%d  avg.time(%f)"%(i, len(val_dataloader), np.average(times)))
+                logging.info("%d/%d  time(%f) avg.time(%f)"%(i, len(val_dataloader), batch_time,  np.average(times)))
 
         return np.average(accuracies_1), np.average(accuracies_5), np.average(losses)
 
@@ -277,6 +279,7 @@ if __name__ == '__main__':
                         help="Tensorboard logs directory")
     parser.add_argument("--dropout_rate", type=float,
                         default=0.5, help="Add dropout to classifier")
+    #parser.add_argument("--test_mode", action='store_true', help="Reduce all learning iterations to minimum so that all errors will appear as fast as possible")
     args = parser.parse_args()
 
     logging.basicConfig(
