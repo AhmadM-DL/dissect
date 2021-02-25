@@ -114,7 +114,7 @@ class Ensemble2(torch.nn.Module):
             times.append(batch_time)
             if i%5==0:
                 print("%d/%d  time(%f) avg.time(%f)"%(i, len(train_dataloader), batch_time, np.average(times)))
-                l#ogging.info("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
+                #logging.info("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
         return np.average(losses)
 
     def _accuracy(self, output, target, topk=(1,)):
@@ -229,7 +229,7 @@ def main(args):
 
         loss = ensemble.train_(optimizer, train_dataloader,
                                torch.nn.CrossEntropyLoss())
-                               
+
         ensemble.save(i, optimizer)
     
         acc1, acc5, valid_loss = ensemble.val(
