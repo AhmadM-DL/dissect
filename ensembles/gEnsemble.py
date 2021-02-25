@@ -114,9 +114,9 @@ class Ensemble2(torch.nn.Module):
             
             batch_time = time.time()-end
             times.append(batch_time)
-            if i%5==0:
-                print("%d/%d  time(%f) avg.time(%f)"%(i, len(train_dataloader), batch_time, np.average(times)))
-                #logging.info("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
+            if i%100==0:
+                #print("%d/%d  time(%f) avg.time(%f)"%(i, len(train_dataloader), batch_time, np.average(times)))
+                logging.info("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
         return np.average(losses)
 
     def _accuracy(self, output, target, topk=(1,)):
@@ -157,9 +157,9 @@ class Ensemble2(torch.nn.Module):
 
             batch_time = time.time()-end
             times.append(batch_time)
-            if i%5==0:
-                print("%d/%d  time(%f) avg.time(%f)"%(i, len(val_dataloader), batch_time, np.average(times)))
-                #logging.info("%d/%d  avg.time(%f)"%(i, len(val_dataloader), np.average(times)))
+            if i%100==0:
+                #print("%d/%d  time(%f) avg.time(%f)"%(i, len(val_dataloader), batch_time, np.average(times)))
+                logging.info("%d/%d  avg.time(%f)"%(i, len(val_dataloader), np.average(times)))
 
         return np.average(accuracies_1), np.average(accuracies_5), np.average(losses)
 
@@ -229,13 +229,18 @@ def main(args):
     for i in range(continue_from_epoch, args.n_epochs):
         logging.info("Epoch %d: " % i)
 
+        logging.info("Train")
         loss = ensemble.train_(optimizer, train_dataloader,
                                torch.nn.CrossEntropyLoss())
 
+        logging.info("Save Model")
         ensemble.save(i, optimizer)
-    
+
+        logging.info("Validate")
         acc1, acc5, valid_loss = ensemble.val(
             valid_dataloader, torch.nn.CrossEntropyLoss())
+
+        logging.info("train-loss(%f) validation-loss(%f) acc1(%f-l) acc5(%f)", loss, valid_loss, acc1, acc5)
 
         writer.add_scalars('loss', {'train': loss, 'valid': valid_loss}, i)
         writer.add_scalars('acc/acc1', acc1, i)
