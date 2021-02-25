@@ -97,10 +97,12 @@ class Ensemble2(torch.nn.Module):
         self.train()
         losses = []
         times = []
+        end = time.time()
         for i, (input, target) in enumerate(train_dataloader):
+            batch_time = time.time()-end
             if i == 20:
                 break
-            end = time.time()
+            
             input = input.to(self.device)
             target = target.to(self.device)
             output = self(input)
@@ -111,12 +113,11 @@ class Ensemble2(torch.nn.Module):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            
-            batch_time = time.time()-end
             times.append(batch_time)
             if i%1==0:
                 #print("%d/%d  time(%f) avg.time(%f)"%(i, len(train_dataloader), batch_time, np.average(times)))
-                logging.info("%d/%d  avg.time(%f)"%(i, len(train_dataloader), np.average(times)))
+                logging.info("%d/%d  time(%f) avg.time(%f)"%(i, len(train_dataloader), batch_time, np.average(times)))
+            end = time.time()
         return np.average(losses)
 
     def _accuracy(self, output, target, topk=(1,)):
@@ -141,10 +142,11 @@ class Ensemble2(torch.nn.Module):
         accuracies_5 = []
         losses = []
         times = []
+        end = time.time()
         for i, (input, target) in enumerate(val_dataloader):
+            batch_time = time.time()-end
             if i == 20:
                 break
-            end = time.time()
             input = input.to(self.device)
             target = target.to(self.device)
             output = self(input)
@@ -157,12 +159,11 @@ class Ensemble2(torch.nn.Module):
             accuracies_5.append(acc5)
             losses.append(loss.item())
 
-            batch_time = time.time()-end
             times.append(batch_time)
             if i%1==0:
                 #print("%d/%d  time(%f) avg.time(%f)"%(i, len(val_dataloader), batch_time, np.average(times)))
                 logging.info("%d/%d  time(%f) avg.time(%f)"%(i, len(val_dataloader), batch_time,  np.average(times)))
-
+            end = time.time()
         return np.average(accuracies_1), np.average(accuracies_5), np.average(losses)
 
 
