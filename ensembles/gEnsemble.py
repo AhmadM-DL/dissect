@@ -98,6 +98,8 @@ class Ensemble2(torch.nn.Module):
         losses = []
         times = []
         for i, (input, target) in enumerate(train_dataloader):
+            if i == 20:
+                break
             end = time.time()
             input = input.to(self.device)
             target = target.to(self.device)
