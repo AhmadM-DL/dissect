@@ -219,7 +219,7 @@ def load_sela_models(architecture, url):
     model.eval()
     return model
 
-def load_swav_models(architecture, url):
+def load_swav_models(architecture, url, n_prototypes=3000):
 
     if "http" in url:
         # remote url
@@ -235,7 +235,7 @@ def load_swav_models(architecture, url):
         normalize=True,
         hidden_mlp=2048,
         output_dim=128,
-        nmb_prototypes=3000,
+        nmb_prototypes=n_prototypes,
     )
 
     # deal with a dataparallel table

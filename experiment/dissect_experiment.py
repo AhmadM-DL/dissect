@@ -26,6 +26,7 @@ def parseargs():
     aa("--output_dir", type=str, default="results")
     aa("--width_multiplier", type=int, default=1)
     aa("--sk_ratio", type=int, default=0)
+    aa("--swav_n_prototypes", type=int, default=3000)
     args = parser.parse_args()
     return args
 
@@ -224,7 +225,7 @@ def load_model(args):
             url= args.model_path
         else:
             url= 'https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar'
-        model = setting.load_swav_models(arch, url)
+        model = setting.load_swav_models(arch, url, args.swav_n_prototypes)
     
     elif "pcl_" in args.model:
         arch = args.model.split("_")[1]
